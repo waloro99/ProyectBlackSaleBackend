@@ -1,23 +1,16 @@
 const express = require('express');
 const app = express();
-const request =  require('request');
-const async = require('async');
+//const request =  require('request');
+//const async = require('async');
+const bodyParser = require('body-parser');
+const routes = require('./rutas/routes');
 
-app.post('/create', (request, response) => {
-    response.json({'itworks': 'yes'});
-})
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: false,
+}));
 
-app.get('/read', (request, response) => {
-    response.json({'itworks': 'yes'});
-})
-
-app.put('/update', (request, response) => {
-    response.json({'itworks': 'yes'});
-})
-
-app.delete('/delete', (request, response) => {
-    response.json({'itworks': 'yes'});
-})
+routes(app);
 
 app.listen('8010', () =>{
     console.log('Listening on port 8010');
