@@ -1,35 +1,6 @@
 //const { pseudoRandomBytes } = require("node:crypto");
 
 // JSON data
-const products = [{
-    id: "1",
-    name: 'Pachón de vidrio 500ml',
-    category: 'Temporada',
-    price: 'Q45.00',
-    photo: '/foto1.png',
-    stocks: '3',
-    description: 'Personalizado con gomitas.'
-},
-{
-    id: "2",
-    name: 'Arreglo de 12 rosas',
-    category: 'Temporada',
-    price: 'Q95.00',
-    photo: '/foto2.png',
-    stocks: '3',
-    description: 'Diseño Minnie Mouse.'
-},
-{
-    id: "3",
-    name: 'Arreglo de globos',
-    category: 'Temporada',
-    price: 'Q95.00',
-    photo: '/foto3.png',
-    stocks: '6',
-    description: 'Con cajita personalizada.'
-},
-];
-
 let respuesta = {
     error: false,
     codigo: 200,
