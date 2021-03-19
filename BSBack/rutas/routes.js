@@ -8,8 +8,13 @@ let respuesta = {
 };
 
 let producto = {
+    id: '',
     name: '',
-    category: ''
+    category: '',
+    price: '',
+    photo: '',
+    stocks: '',
+    description: ''
 };
 
 // Router
@@ -25,8 +30,13 @@ const router = app => {
             };
         } else {
                 producto = {
-                name: req.body.name,
-                category: req.body.category
+                    id: req.body.id,
+                    name: req.body.name,
+                    category: req.body.category,
+                    price: req.body.price,
+                    photo: req.body.photo,
+                    stocks: req.body.stocks,
+                    description: req.body.description
                 };
                 respuesta = {
                 error: false,
@@ -79,8 +89,13 @@ const router = app => {
                 };
             } else {
                 producto = {
-                name: req.body.name,
-                category: req.body.category
+                    id: req.body.id,
+                    name: req.body.name,
+                    category: req.body.category,
+                    price: req.body.price,
+                    photo: req.body.photo,
+                    stocks: req.body.stocks,
+                    description: req.body.description
                 };
                 respuesta = {
                 error: false,
@@ -95,7 +110,7 @@ const router = app => {
 
     //delete
     app.delete('/api/v1/products', (req, res) => {
-        if(products.name === '') {
+        if(producto.name === '') {
             respuesta = {
             error: true,
             codigo: 404,
@@ -108,8 +123,13 @@ const router = app => {
             mensaje: 'Producto eliminado'
             };
             producto = {
-            name: '',
-            category: ''
+                id: '',
+                name: '',
+                category: '',
+                price: '',
+                photo: '',
+                stocks: '',
+                description: ''
             };
         }
     res.send(respuesta);
