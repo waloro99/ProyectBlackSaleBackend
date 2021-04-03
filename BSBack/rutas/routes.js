@@ -7,15 +7,9 @@ let respuesta = {
     mensaje: ''
 };
 
-let producto = {
-    id: '',
-    name: '',
-    category: '',
-    price: '',
-    photo: '',
-    stocks: '',
-    description: ''
-};
+const express = require('express')
+const router = express.Router()
+const Product = require('../models/product')
 
 // Router
 const router = app => {
