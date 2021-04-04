@@ -41,7 +41,7 @@ const router = app => {
                 mensaje: 'Producto creado',
                 respuesta: product
             };
-            const c1 = await product.save()
+            const p1 = await product.save()
         }
     res.send(respuesta);
     })  
@@ -94,7 +94,7 @@ const router = app => {
     })
 
     //update
-    app.put('/api/v1/products', (req, res) => {
+    app.put('/api/v1/products/:id', (req, res) => {
         if(!req.body.name) {
             respuesta = {
             error: true,
@@ -136,7 +136,7 @@ const router = app => {
                 codigo: 204,
                 mensaje: 'Producto actualizado'
                 };
-                const c1 = await product.save()
+                const p1 = await product.save()
             }
         }
     res.send(respuesta);
@@ -157,7 +157,7 @@ const router = app => {
             mensaje: 'Producto eliminado'
             };
             const product = await Product.findByIdAndRemove(req.params.id)
-            const c1 = await product.remove()
+            const p1 = await product.remove()
         }
     res.send(respuesta);
     })
