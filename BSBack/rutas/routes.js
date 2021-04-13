@@ -8,9 +8,9 @@ let respuesta = {
 };
 
 const express = require('express');
-const { pseudoRandomBytes } = require('node:crypto');
+//const { pseudoRandomBytes } = require('node:crypto');
 const product = require('../models/product');
-const router = express.Router()
+//const router = express.Router()
 const Product = require('../models/product')
 
 // Router
@@ -94,7 +94,7 @@ const router = app => {
     })
 
     //update
-    app.put('/api/v1/products/:id', (req, res) => {
+    app.put('/api/v1/products/:id', async(req, res) => {
         if(!req.body.name) {
             respuesta = {
             error: true,
