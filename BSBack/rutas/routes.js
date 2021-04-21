@@ -18,7 +18,7 @@ const router = app => {
 
     //create
     app.post('/api/v1/products', async(req, res) => {
-        if(!req.body.name) {
+        if(!req.body.name || !req.body.id || !req.body.category || !req.body.price || !req.body.stocks || !req.body.photo || !req.body.description) {
             respuesta = {
             error: true,
             codigo: 502,
@@ -53,21 +53,25 @@ const router = app => {
             codigo: 200,
             mensaje: ''
             };
-            if(producto === '') {
-            respuesta = {
-                error: true,
-                codigo: 501,
-                mensaje: 'El producto no ha sido creado'
-            };
-            } else {
+            
+            try{
+            const products = await Product.find()
             respuesta = {
                 error: false,
                 codigo: 200,
-                mensaje: 'respuesta del producto',               
+                mensaje: 'respuesta del producto',
+                respuesta: products             
             };
-            const products = await Product.find()
-            }
             res.send(respuesta);
+            }catch(err){
+            respuesta = {
+                error: true,
+                codigo: 501,
+                mensaje: 'El producto no ha sido creado'    
+            };          
+            res.send(respuesta);          
+            }
+            
     })
 
     app.get('/api/v1/products/:id', async(req, res) => {
@@ -76,40 +80,36 @@ const router = app => {
             codigo: 200,
             mensaje: ''
             };
-            if(producto === '') {
-            respuesta = {
-                error: true,
-                codigo: 501,
-                mensaje: 'El producto no ha sido creado'
-            };
-            } else {
+            try{
+            const products = await Product.findById(req.params.id)
             respuesta = {
                 error: false,
                 codigo: 200,
-                mensaje: 'respuesta del producto',               
+                mensaje: 'respuesta del producto', 
+                respuesta: products            
             };
-            const products = await Product.findById(req.params.id)
-            }
             res.send(respuesta);
+            } catch(err){
+                respuesta = {
+                    error: true,
+                    codigo: 501,
+                    mensaje: 'El producto no ha sido creado'
+                };
+                res.send(respuesta);
+            }          
     })
 
     //update
     app.put('/api/v1/products/:id', async(req, res) => {
-        if(!req.body.name) {
+        try{
+        if(!req.body.name || !req.body.id || !req.body.category || !req.body.price || !req.body.stocks || !req.body.photo || !req.body.description) {
             respuesta = {
             error: true,
             codigo: 502,
             mensaje: 'Todos los campos son requeridos'
         };
         } else {
-            if(producto.name === '') {
-                respuesta = {
-                error: true,
-                codigo: 404,
-                mensaje: 'El producto no ha sido creado'
-                };
-            } else {
-                const product = await Character.findById(req.params.id)
+                const product = await Product.findById(req.params.id)
                     if(req.body.id){
                         product.id = req.body.id
                     }
@@ -134,32 +134,42 @@ const router = app => {
                 respuesta = {
                 error: false,
                 codigo: 204,
-                mensaje: 'Producto actualizado'
+                mensaje: 'Producto actualizado',
+                respuesta: product
                 };
-                const p1 = await product.save()
-            }
-        }
-    res.send(respuesta);
+                const p1 = await product.save()      
+                res.send(respuesta);    
+        }     
+            } catch(err) {
+                respuesta = {
+                    error: true,
+                    codigo: 404,
+                    mensaje: 'El producto no ha sido creado'
+                };
+                res.send(respuesta);
+            }          
     })
 
     //delete
     app.delete('/api/v1/products/:id', async(req, res) => {
-        if(producto.name === '') {
-            respuesta = {
-            error: true,
-            codigo: 404,
-            mensaje: 'El producto no ha sido creado'
-            };
-        } else {
-            respuesta = {
-            error: false,
-            codigo: 204,
-            mensaje: 'Producto eliminado'
-            };
+        try {
             const product = await Product.findByIdAndRemove(req.params.id)
             const p1 = await product.remove()
-        }
-    res.send(respuesta);
+            respuesta = {
+                error: false,
+                codigo: 204,
+                mensaje: 'Producto eliminado',
+                respuesta: p1
+            };
+            res.send(respuesta);
+        } catch(err) {
+            respuesta = {
+                error: true,
+                codigo: 404,
+                mensaje: 'El producto no ha sido creado'
+            };
+            res.send(respuesta);
+        }   
     })
 
     app.use(function(req, res, next) {
