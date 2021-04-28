@@ -1,11 +1,11 @@
-process.env.NODE_ENV = 'test';
+//process.env.NODE_ENV = 'test';
 let mongoose = require("mongoose");
 let Product = require('../models/product');
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('./rutas/routes');
+let server = require('../rutas/routes');
 let should = chai.should();
 const axios = require('axios');
 chai.use(chaiHttp);
@@ -17,6 +17,24 @@ describe('Products', () => {
 		done();		   
 		});		
 	});
+
+
+    /*
+    * Test the /GET 
+    */
+    describe('/GET products', () => {
+        it('it should GET all the products', (done) => {
+            chai.request(server)
+            .get('/api/v1/products')
+            .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    res.body.length.should.be.eql(0);
+                done();
+            });
+        });
+    });
+    
 /*
   * Test the /POST route
 */
@@ -69,21 +87,7 @@ describe('Products', () => {
         });
     });
 
-    /*
-    * Test the /GET 
-    */
-    describe('/GET products', () => {
-        it('it should GET all the products', (done) => {
-            chai.request(server)
-            .get('/api/v1/products')
-            .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    res.body.length.should.be.eql(0);
-                done();
-            });
-        });
-    });
+    
 
     /*
     * Test the /GET/:id 
