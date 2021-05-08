@@ -13,6 +13,8 @@ const product = require('../models/product');
 //const router = express.Router()
 const Product = require('../models/product')
 
+
+
 // Router
 const router = app => {
 

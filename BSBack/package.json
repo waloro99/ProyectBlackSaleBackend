@@ -7,6 +7,7 @@
     "async": "^3.2.0",
     "axios": "^0.21.1",
     "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.3",
@@ -21,7 +22,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "dev": "nodemon index.js",
-    "test": "mocha --timeout 10000"
+    "test": "mocha "
   },
   "repository": {
     "type": "git",
