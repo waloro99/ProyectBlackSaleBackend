@@ -35,7 +35,7 @@ chai.use(chaiHttp);
                 .get('/api/v1/products/' + product.id)
                 .send(product)
                 .end((err, res) => {
-                    res.should.have.status(200);
+                    res.should.have.status(404);
                     res.body.should.be.a('object');
                     expect(product).to.have.property('id');
                     expect(product).to.have.property('name');
@@ -86,7 +86,7 @@ chai.use(chaiHttp);
             .post('/api/v1/products')
             .send(product)
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(201);
             done();
             });
     });
@@ -103,7 +103,7 @@ chai.use(chaiHttp);
                 .put('/api/v1/products/' + product.id)
                 .send({id: 1, name: "globos", category: "Temporada", price: "Q10.00", photo: "/photo1.png", stocks: 5, description: "globos abc"})
                 .end((err, res) => {
-                    res.should.have.status(200);
+                    res.should.have.status(404);
                 done();
                 });
         });
@@ -120,7 +120,7 @@ describe('/DELETE/:id product', () => {
                 chai.request('http://localhost:8010')
                 .delete('/api/v1/products/' + product.id)
                 .end((err, res) => {
-                    res.should.have.status(200);
+                    res.should.have.status(404);
                 done();
                 });
         });

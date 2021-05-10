@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const url = 'mongodb://localhost/ProductDBbs'
-const app = express();
+var app = express();
 //const request =  require('request');
 //const async = require('async');
 const bodyParser = require('body-parser');
 const routes = require('./rutas/routes');
+const router = express.Router()//-
+var cors = require('cors');
+app.use(cors());
 
 mongoose.connect(url, {useNewUrlParser:true})
 const con = mongoose.connection
