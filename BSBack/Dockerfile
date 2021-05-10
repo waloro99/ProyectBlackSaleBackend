@@ -4,4 +4,5 @@ COPY package.json /index
 COPY package-lock.json /index
 RUN npm install
 COPY . /index
-CMD ["npm", "start"]
+EXPOSE 8010
+CMD ["npm", "run", "dev"]

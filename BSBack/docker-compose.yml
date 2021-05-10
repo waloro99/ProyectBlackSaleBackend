@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+    sample:
+        image: backendbs
+        ports:
+            - 8010:8010
+        depends_on: 
+            - mongo
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+
+    mongo:
+        image: mongo:latest
+        ports:
+        - '27017:27017'

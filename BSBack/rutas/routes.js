@@ -12,6 +12,18 @@ const express = require('express');
 const product = require('../models/product');
 //const router = express.Router()
 const Product = require('../models/product')
+//const clearCache = require('../services/cache')
+/*var redis = require('redis');
+var client = redis.createClient();
+
+client.on('ready',function(){
+    console.log("Redis is ready")
+})*/
+/*var redisClient = require('redis').createClient;
+var redis = redisClient(6379, '0.0.0.0');*/
+
+/*const redisClient = require('redis')
+const redis = redisClient.createClient(6379,'process.env.REDIS_HOST')*/
 
 // Router
 const router = app => {
@@ -50,8 +62,19 @@ const router = app => {
 
     app.get('/api/v1/products/:id', async(req, res) => {
         try{
-            const products = await Product.findById(req.params.id)
-            res.status(200).json(products)
+            /*redis.GET(req.params.id, async function(err, reply) {
+                if (err) {
+                    res.status(404).send('Error ' + err)
+                }
+                else if (reply) {
+                    res.status(200).json(reply);
+                }
+                else {*/
+                const products = await Product.findById(req.params.id)
+                res.status(200).json(products)
+                //redis.set(req.params.id, JSON.stringify(products))
+                //}
+            //})
         }catch(err){
             res.status(404).send('Error ' + err)
         }       
@@ -85,6 +108,9 @@ const router = app => {
                 const p1 = await product.save()
                 //res.json(p1)
                 res.sendStatus(204)
+
+                //redis.set(req.params.id, JSON.stringify(product))
+                
             }catch(err){
                 res.status(404).send('Error')
             }
