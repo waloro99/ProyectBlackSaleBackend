@@ -1,4 +1,17 @@
-//const { pseudoRandomBytes } = require("node:crypto");
+var cors = require('cors');
+
+// MYSQL
+const mysql = require('mysql')
+const db = mysql.createConnection({
+host: "rds-mysql-blacksale.cwsoxzkefv5g.us-east-1.rds.amazonaws.com",
+user: "admin",
+password: "blacksale123",
+database:"db_blacksale" 
+})
+
+module.exports = db;
+
+
 
 // JSON data
 let respuesta = {
@@ -28,111 +41,193 @@ const redis = redisClient.createClient(6379,'process.env.REDIS_HOST')*/
 // Router
 const router = app => {
 
+    //*************  PRODUCTS TABLE  *******************/
+
     //create
     app.post('/api/v1/products', async(req, res) => {
-        const product = new Product
-        ({
-                id: req.body.id,
-                name: req.body.name,
-                category: req.body.category,
-                price: req.body.price,
-                photo: req.body.photo,
-                stocks: req.body.stocks,
-                description: req.body.description
-        })
-        try{
-            const p1 = await product.save()
-            //res.json(p1)
-            res.sendStatus(201)
-        }catch(err){
-            res.status(404).send('Error')
-        }
+        const name = req.body.name;
+        const category = req.body.category;
+        const price = req.body.price;
+        const photo = req.body.photo;
+        const stocks = req.body.stocks;
+        const description = req.body.description;
+        
+        db.query("INSERT INTO Productos (name, category, price, photo, stocks, description) VALUES (?,?,?,?,?,?)",[name,category,price,photo,stocks,description], (err,result)=>{
+            if(err) {
+                console.log(err)
+                res.sendStatus(404)
+            } else {
+                console.log(result)
+                res.sendStatus(201)
+            }
+        });
     })  
 
     //read
     app.get('/api/v1/products', async(req, res) => {
-        try{
-            const products = await Product.find()
-            res.status(200).json(products)
-        }catch(err){
-            res.status(404).send('Error ' + err)
-        }
+        db.query("SELECT * FROM Productos", (err,result)=>{
+            if(err) {
+                console.log(err)
+                res.sendStatus(404)
+            } else {
+                res.status(200).json(result)
+            }
+        
+        });
             
     })
 
     app.get('/api/v1/products/:id', async(req, res) => {
-        try{
-            /*redis.GET(req.params.id, async function(err, reply) {
-                if (err) {
-                    res.status(404).send('Error ' + err)
+        const id = req.params.id;
+         db.query("SELECT * FROM Productos WHERE _id = ?", id, 
+            (err,result)=>{
+                if(err) {
+                    console.log(err)
+                    result.sendStatus(404)
+                } else {
+                    res.status(200).send(result)
                 }
-                else if (reply) {
-                    res.status(200).json(reply);
-                }
-                else {*/
-                const products = await Product.findById(req.params.id)
-                res.status(200).json(products)
-                //redis.set(req.params.id, JSON.stringify(products))
-                //}
-            //})
-        }catch(err){
-            res.status(404).send('Error ' + err)
-        }       
+            });   
     })
 
     //update
     app.put('/api/v1/products/:id', async(req, res) => {
-        try{
-            const product = await Product.findById(req.params.id)
-                if(req.body.id){
-                    product.id = req.body.id
-                }
-                if(req.body.name){
-                    product.name = req.body.name
-                }
-                if(req.body.category){
-                    product.category = req.body.category
-                }
-                if(req.body.price){
-                    product.price = req.body.price
-                }
-                if(req.body.photo){
-                    product.photo = req.body.photo
-                }
-                if(req.body.stocks){
-                    product.stocks = req.body.stocks
-                }
-                if(req.body.description){
-                    product.description = req.body.description
-                }
-                const p1 = await product.save()
-                //res.json(p1)
-                res.sendStatus(204)
 
-                //redis.set(req.params.id, JSON.stringify(product))
-                
-            }catch(err){
-                res.status(404).send('Error')
+        const id = req.params.id;
+        const name = req.body.name;
+        const category = req.body.category;
+        const price = req.body.price;
+        const photo = req.body.photo;
+        const stocks = req.body.stocks;
+        const description = req.body.description;
+        
+        db.query("UPDATE Productos SET name = ?, category = ?, price = ?, photo = ?, stocks = ?, description = ? WHERE _id = ?",[name,category,price,photo,stocks,description,id], 
+        (err,result)=>{
+            if(err) {
+                console.log(err)
+                result.sendStatus(404)
+            } else {
+                console.log(result)
+                res.sendStatus(204)
             }
+        });
     })
 
     //delete
     app.delete('/api/v1/products/:id', async(req, res) => {
-        try{
-            const product = await Product.findByIdAndRemove(req.params.id)
-            const p1 = await product.remove()
-            //res.json(p1)
-            res.sendStatus(204)
-        }catch(err){
-            res.status(404).send('Error')
-        }
+        const id = req.params.id;
+        
+        db.query("DELETE FROM Productos WHERE _id = ?", id, (err,result)=>{
+            if(err) {
+                console.log(err)
+                result.sendStatus(404)
+            } else {
+                res.sendStatus(204)
+            }
+        }) 
     })
+
+
+    //*************  USERS TABLE  *******************/
+
+    //create
+    app.post('/api/v1/users', async(req, res) => {
+        const name = req.body.name;
+        const lastname = req.body.lastname;
+        const email = req.body.email;
+        const role = req.body.role;
+        const enabled = req.body.enabled;
+        const permissionCreate = req.body.permissionCreate;
+        const permissionEdit = req.body.permissionEdit;
+        const permissionDelete = req.body.permissionDelete;
+        
+        db.query("INSERT INTO Usuarios (name, lastname, email, role, enabled, persmissionCreate, persmissionEdit, persmissionDelete) VALUES (?,?,?,?,?,?,?,?)",[name,lastname,email,role,enabled,permissionCreate,permissionEdit,permissionDelete], (err,result)=>{
+            if(err) {
+                console.log(err)
+                res.sendStatus(404)
+            } else {
+                console.log(result)
+                res.sendStatus(201)
+            }
+        });
+    })  
+
+    //read
+    app.get('/api/v1/users', async(req, res) => {
+        db.query("SELECT * FROM Usuarios", (err,result)=>{
+            if(err) {
+                console.log(err)
+                res.sendStatus(404)
+            } else {
+                res.status(200).send(result)
+            }
+        
+        });
+            
+    })
+
+    app.get('/api/v1/users/:id', async(req, res) => {
+        const id = req.params.id;
+         db.query("SELECT * FROM Usuarios WHERE _id = ?", id, 
+            (err,result)=>{
+                if(err) {
+                    console.log(err)
+                    result.sendStatus(404)
+                } else {
+                    res.status(200).send(result)
+                }
+            });   
+    })
+
+    //update
+    app.put('/api/v1/users/:id', async(req, res) => {
+
+        const id = req.params.id;
+        const name = req.body.name;
+        const lastname = req.body.lastname;
+        const email = req.body.email;
+        const role = req.body.role;
+        const enabled = req.body.enabled;
+        const permissionCreate = req.body.permissionCreate;
+        const permissionEdit = req.body.permissionEdit;
+        const permissionDelete = req.body.permissionDelete;
+        
+        db.query("UPDATE Usuarios SET name = ?, lastname = ?, email = ?, role = ?, enabled = ?, permissionCreate = ?, permissionEdit = ?, permissionDelete = ? WHERE _id = ?",[name,lastname,email,role,enabled,permissionCreate,permissionEdit,permissionDelete,id], 
+        (err,result)=>{
+            if(err) {
+                console.log(err)
+                result.sendStatus(404)
+            } else {
+                console.log(result)
+                res.sendStatus(204)
+            }
+        });
+    })
+
+    //delete
+    app.delete('/api/v1/users/:id', async(req, res) => {
+        const id = req.params.id;
+        
+        db.query("DELETE FROM Usuarios WHERE _id = ?", id, (err,result)=>{
+            if(err) {
+                console.log(err)
+                result.sendStatus(404)
+            } else {
+                res.sendStatus(204)
+            }
+        }) 
+    })
+        
+
+
+
+
 
     app.use(function(req, res, next) {
         respuesta = {
-        error: true, 
-        codigo: 404, 
-        mensaje: 'URL no encontrada'
+            error: true, 
+            codigo: 404, 
+            mensaje: 'URL no encontrada'
         };
         res.status(404).send(respuesta);
     });

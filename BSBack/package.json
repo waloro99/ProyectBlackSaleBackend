@@ -11,6 +11,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.3",
+    "mysql": "^2.18.1",
     "redis": "^3.1.2",
     "redis-server": "^1.2.2",
     "request": "^2.88.2"
