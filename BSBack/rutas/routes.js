@@ -141,7 +141,7 @@ const router = app => {
         const permissionEdit = req.body.permissionEdit;
         const permissionDelete = req.body.permissionDelete;
         
-        db.query("INSERT INTO Usuarios (name, lastname, email, role, enabled, persmissionCreate, persmissionEdit, persmissionDelete) VALUES (?,?,?,?,?,?,?,?)",[name,lastname,email,role,enabled,permissionCreate,permissionEdit,permissionDelete], (err,result)=>{
+        db.query("INSERT INTO Usuarios (name, lastname, email, role, enabled, permissionCreate, permissionEdit, permissionDelete) VALUES (?,?,?,?,?,?,?,?)",[name,lastname,email,role,enabled,permissionCreate,permissionEdit,permissionDelete], (err,result)=>{
             if(err) {
                 console.log(err)
                 res.sendStatus(404)
