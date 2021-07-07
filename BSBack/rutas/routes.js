@@ -165,10 +165,24 @@ const router = app => {
         });
             
     })
-
+/*
     app.get('/api/v1/users/:id', async(req, res) => {
         const id = req.params.id;
          db.query("SELECT * FROM Usuarios WHERE _id = ?", id, 
+            (err,result)=>{
+                if(err) {
+                    console.log(err)
+                    result.sendStatus(404)
+                } else {
+                    res.status(200).send(result)
+                }
+            });   
+    })*/
+
+    //obtener verififacion cuenta habilitada
+    app.get('/api/v1/users/:email', async(req, res) => {
+        const email = req.params.email;
+         db.query("SELECT * FROM Usuarios WHERE email = ? ", email, 
             (err,result)=>{
                 if(err) {
                     console.log(err)
